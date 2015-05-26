@@ -39,6 +39,11 @@ Developed By
 ------------
 
 * Marco Hernaiz Cao - <marco.hernaiz.cao@gmail.com>
+
+Credits
+-------
+
+ * [Material dialogs](https://github.com/afollestad/material-dialogs)
  
 License
 -------
