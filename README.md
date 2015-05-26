@@ -17,7 +17,7 @@ Static methods for each class. Some of them must be initialized first.
 Gradle
 ------
 
-RobotoCalendarView uses the awesome tool [Jitpack] (https://jitpack.io/)
+Helperoid uses the awesome tool [Jitpack] (https://jitpack.io/)
 
 Add the repository to your general build.gradle:
 
