@@ -21,17 +21,44 @@ import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Shader;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class ImageHelper {
+
+    private static final String LOG_TAG = "ImageHelper";
+
+    // ************************************************************************************************************************************************************************
+    // * Show dialog with take picture or get picture from gallery methods
+    // ************************************************************************************************************************************************************************
 
     public static final int SELECT_PICTURE_FROM_GALLERY_REQUEST = 10;
     public static final int CAMERA_REQUEST = 20;
@@ -179,4 +206,268 @@ public class ImageHelper {
     private static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
+
+    // ************************************************************************************************************************************************************************
+    // * Encoding and decoding methods
+    // ************************************************************************************************************************************************************************
+
+    public static final int IMAGE_MAX_WIDTH = 1080;
+    public static final int IMAGE_MAX_HEIGHT = 768;
+
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
+
+    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, resId, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        final float roundPx = pixels;
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
+    }
+
+    public static Bitmap getRoundedImage(Bitmap bitmap, int mBorderColor, int mBorderWidth) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+
+        int mBitmapWidth = bitmap.getWidth();
+        int mBitmapHeight = bitmap.getHeight();
+
+        RectF mBorderRect = new RectF();
+        RectF mDrawableRect = new RectF();
+
+        BitmapShader mBitmapShader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+
+        Paint mBitmapPaint = new Paint();
+        Paint mBorderPaint = new Paint();
+
+        mBitmapPaint.setAntiAlias(true);
+        mBitmapPaint.setShader(mBitmapShader);
+
+        mBorderPaint.setStyle(Paint.Style.STROKE);
+        mBorderPaint.setAntiAlias(true);
+        mBorderPaint.setColor(mBorderColor);
+        mBorderPaint.setStrokeWidth(mBorderWidth);
+
+        mBitmapHeight = bitmap.getHeight();
+        mBitmapWidth = bitmap.getWidth();
+
+        mBorderRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        float mBorderRadius = Math.min((mBorderRect.height() - mBorderWidth) / 2, (mBorderRect.width() - mBorderWidth) / 2);
+
+        mDrawableRect.set(mBorderWidth, mBorderWidth, mBorderRect.width() - mBorderWidth, mBorderRect.height() - mBorderWidth);
+        float mDrawableRadius = Math.min(mDrawableRect.height() / 2, mDrawableRect.width() / 2);
+
+        Matrix mShaderMatrix = new Matrix();
+
+        float scale;
+        float dx = 0;
+        float dy = 0;
+
+        mShaderMatrix.set(null);
+
+        if (mBitmapWidth * mDrawableRect.height() > mDrawableRect.width() * mBitmapHeight) {
+            scale = mDrawableRect.height() / (float) mBitmapHeight;
+            dx = (mDrawableRect.width() - mBitmapWidth * scale) * 0.5f;
+        } else {
+            scale = mDrawableRect.width() / (float) mBitmapWidth;
+            dy = (mDrawableRect.height() - mBitmapHeight * scale) * 0.5f;
+        }
+
+        mShaderMatrix.setScale(scale, scale);
+        mShaderMatrix.postTranslate((int) (dx + 0.5f) + mBorderWidth, (int) (dy + 0.5f) + mBorderWidth);
+
+        mBitmapShader.setLocalMatrix(mShaderMatrix);
+
+        Canvas canvas = new Canvas(output);
+
+        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2, mDrawableRadius, mBitmapPaint);
+        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2, mBorderRadius, mBorderPaint);
+
+        return output;
+    }
+
+    public static Bitmap decodeSampledBitmapFromFile(String url, int width, int height) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(url, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, width, height);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(url, options);
+    }
+
+    private static Bitmap decodeSampledBitmapFromFile(String url, int size) {
+        return decodeSampledBitmapFromFile(url, size, size);
+    }
+
+    // ************************************************************************************************************************************************************************
+    // * Rotate picture methods
+    // ************************************************************************************************************************************************************************
+
+    public static Bitmap decodeAndRotateImage(String imagePath, int size) {
+        Bitmap bitmap = ImageHelper.decodeSampledBitmapFromFile(imagePath, size);
+        if (ImageHelper.isRotated(imagePath)) {
+            int orientation = ImageHelper.getOrientation(imagePath);
+            bitmap = ImageHelper.rotateBitmap(bitmap, orientation);
+            Log.d(ImageHelper.LOG_TAG, "imaged has been  rotated ");
+        }
+        return bitmap;
+    }
+
+    public static int getOrientation(String filename) {
+        ExifInterface exif;
+        int orientation = 0;
+        try {
+            exif = new ExifInterface(filename);
+            orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return orientation;
+    }
+
+    public static boolean isRotated(String filename) {
+        return getOrientation(filename) > 0;
+    }
+
+    public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
+
+        Matrix matrix = new Matrix();
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_NORMAL:
+                return bitmap;
+            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                matrix.setScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.setRotate(180);
+                break;
+            case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                matrix.setRotate(180);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_TRANSPOSE:
+                matrix.setRotate(90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.setRotate(90);
+                break;
+            case ExifInterface.ORIENTATION_TRANSVERSE:
+                matrix.setRotate(-90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                matrix.setRotate(-90);
+                break;
+            default:
+                return bitmap;
+        }
+        try {
+            Log.d(LOG_TAG, "imaged has been  rotated ");
+            Bitmap bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            bitmap.recycle();
+            return bmRotated;
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public static String getImageEncodedInBase64(String mImageLocalPath, int quality) {
+
+        String encodedImage = null;
+        try {
+            Bitmap bitmap = decodeSampledBitmapFromFile(mImageLocalPath, IMAGE_MAX_WIDTH, IMAGE_MAX_HEIGHT);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            byteArray = null;
+            bitmap.recycle();
+            bitmap = null;
+            System.gc();
+        } catch (OutOfMemoryError e) {
+            Log.e(ImageHelper.LOG_TAG, String.format("OutOfMemoryError: downloading image quality to %d", quality - 10));
+            return getImageEncodedInBase64(mImageLocalPath, quality - 10);
+        }
+
+        return encodedImage;
+    }
+
+    /**
+     * Download the image. ALWAYS CALL INSIDE ASYNC TASK
+     *
+     * @param imageUrl
+     * @return
+     */
+    public static Bitmap getBitmapFromURL(String imageUrl) {
+        try {
+            URL url = new URL(imageUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+
+            return myBitmap;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("getBmpFromUrl error: ", e.getMessage().toString());
+            return null;
+        }
+    }
+
 }
