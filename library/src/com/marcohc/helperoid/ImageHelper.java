@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -211,8 +212,8 @@ public class ImageHelper {
     // * Encoding and decoding methods
     // ************************************************************************************************************************************************************************
 
-    public static final int IMAGE_MAX_WIDTH = 1080;
-    public static final int IMAGE_MAX_HEIGHT = 768;
+    public static int IMAGE_MAX_WIDTH = 1080;
+    public static int IMAGE_MAX_HEIGHT = 768;
 
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
@@ -470,4 +471,7 @@ public class ImageHelper {
         }
     }
 
+    public static boolean checkCameraHardware(Context context) {
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
+    }
 }
