@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 22
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.1.0"
     }
 
     sourceSets {
@@ -27,8 +27,8 @@ dependencies {
     compile 'com.afollestad:material-dialogs:0.7.4.2'
 
     compile(
-            [group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.4.1'],
-            [group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.4.1'],
-            [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.4.1']
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.5.1'],
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.5.1'],
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.5.1']
     )
 }
