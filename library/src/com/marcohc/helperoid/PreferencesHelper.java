@@ -76,6 +76,10 @@ public class PreferencesHelper {
         return sharedPreferences;
     }
 
+    public static void remove(String key) {
+        sharedPreferences.edit().remove(key).apply();
+    }
+
     public static String getString(String key, String defaultValue) {
         return sharedPreferences.getString(key, defaultValue);
     }
