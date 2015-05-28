@@ -32,7 +32,7 @@ repositories {
 And then add the library in your specific project build.gradle:
 
 ``` xml
-    compile 'com.github.marcohc:helperoid:1.1.1'
+    compile 'com.github.marcohc:helperoid:1.1.2'
 ```
 
 Developed By
