@@ -17,17 +17,25 @@ public class ParseHelper {
     private static final String LOG_TAG = "ParserHelper";
     private static ObjectMapper sObjectMapper;
 
-    public static <T extends Object> T parseJson(JSONObject jsonObject, Class<T> type) {
+    public static <T extends Object> T parseJson(String jsonString, Class<T> type) {
         ObjectMapper mapper = getObjectMapper();
         T model = null;
-        if (jsonObject != null) {
+        if (jsonString != null && !jsonString.isEmpty()) {
             try {
-                model = mapper.readValue(jsonObject.toString(), type);
+                model = mapper.readValue(jsonString, type);
             } catch (IOException e) {
                 Log.e(LOG_TAG, String.format("parseJsonObject: %s", e.getMessage()));
             }
         }
         return model;
+    }
+
+    public static <T extends Object> T parseJson(JSONObject jsonObject, Class<T> type) {
+        if (jsonObject != null) {
+            return parseJson(jsonObject.toString(), type);
+        } else {
+            return null;
+        }
     }
 
     public static <T extends Object> List<T> parseJsonArray(JSONArray jsonArray, Class<T> type) {
@@ -44,11 +52,11 @@ public class ParseHelper {
         return list;
     }
 
-    public static <T extends Object> List<T> parseJsonStringArray(String picturesJsonString, Class<T> type) {
+    public static <T extends Object> List<T> parseJsonStringArray(String jsonString, Class<T> type) {
         List<T> list = new ArrayList<>();
-        if (picturesJsonString != null) {
+        if (jsonString != null) {
             try {
-                list = parseJsonArray(new JSONArray(picturesJsonString), type);
+                list = parseJsonArray(new JSONArray(jsonString), type);
             } catch (JSONException e) {
                 Log.e(LOG_TAG, String.format("parseJsonStringArray: %s", e.getMessage()));
             }
