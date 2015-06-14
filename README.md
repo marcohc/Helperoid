@@ -17,7 +17,7 @@ Static methods for each class. Some of them must be initialized first.
 Gradle
 ------
 
-Helperoid uses the awesome tool [Jitpack] (https://jitpack.io/)
+Helperoid uses the awesome tool [Jitpack] (https://jitpack.io/#marcohc/helperoid)
 
 Add the repository to your general build.gradle:
 
@@ -32,7 +32,7 @@ repositories {
 And then add the library in your specific project build.gradle:
 
 ``` xml
-    compile 'com.github.marcohc:helperoid:1.1.2'
+    compile 'com.github.marcohc:helperoid:<release>'
 ```
 
 Developed By
