@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParseHelper {
+public class ParserHelper {
 
     private static final String LOG_TAG = "ParserHelper";
     private static ObjectMapper sObjectMapper;
