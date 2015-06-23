@@ -39,6 +39,10 @@ public class DialogHelper {
         new MaterialDialog.Builder(context).title(title).content(message).positiveText(acceptButtonText).negativeText(cancelButtonText).callback(callback).show();
     }
 
+    public static void showConfirmationDialog(int message, int acceptButtonText, int cancelButtonText, Context context, MaterialDialog.ButtonCallback callback) {
+        new MaterialDialog.Builder(context).content(message).positiveText(acceptButtonText).negativeText(cancelButtonText).callback(callback).show();
+    }
+
     public static void showSelectionDialog(int title, String[] items, Context context, MaterialDialog.ListCallback listCallback) {
         new MaterialDialog.Builder(context).title(title).items(items).itemsCallback(listCallback).show();
     }
