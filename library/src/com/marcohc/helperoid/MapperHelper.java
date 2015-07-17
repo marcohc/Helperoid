@@ -6,7 +6,7 @@ public class MapperHelper {
 
     private static ModelMapper mapper;
 
-    private static ModelMapper getMapper() {
+    public static ModelMapper getMapper() {
         if (mapper == null) {
             mapper = new ModelMapper();
         }
