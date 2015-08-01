@@ -70,6 +70,12 @@ public class ApplicationHelper {
         }
     }
 
+    public static boolean hasInternetConnection(Context context) {
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected() && networkInfo.isAvailable();
+    }
+
     public static void sendEmail(Context context, String dialogTitle, String[] recipients, String subject, String body, String path) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("message/rfc822");
