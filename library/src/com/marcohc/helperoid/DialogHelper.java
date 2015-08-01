@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.marcohc.helperoid;
 
 import android.content.Context;
@@ -23,32 +22,32 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 public class DialogHelper {
 
-    public static void showAlertDialog(int message, int acceptButtonText, Context context) {
-        new MaterialDialog.Builder(context).content(message).positiveText(acceptButtonText).show();
+    public static MaterialDialog showAlertDialog(int message, int acceptButtonText, Context context) {
+        return new MaterialDialog.Builder(context).content(message).positiveText(acceptButtonText).show();
     }
 
-    public static void showInformationDialog(int title, int message, int acceptButtonText, Context context) {
-        new MaterialDialog.Builder(context).title(title).content(message).positiveText(acceptButtonText).show();
+    public static MaterialDialog showInformationDialog(int title, int message, int acceptButtonText, Context context) {
+        return new MaterialDialog.Builder(context).title(title).content(message).positiveText(acceptButtonText).show();
     }
 
-    public static void showInformationDialog(int title, int message, int acceptButtonText, MaterialDialog.ButtonCallback callback, Context context) {
-        new MaterialDialog.Builder(context).title(title).content(message).positiveText(acceptButtonText).callback(callback).show();
+    public static MaterialDialog showInformationDialog(int title, int message, int acceptButtonText, MaterialDialog.ButtonCallback callback, Context context) {
+        return new MaterialDialog.Builder(context).title(title).content(message).positiveText(acceptButtonText).callback(callback).show();
     }
 
-    public static void showConfirmationDialog(int title, int message, int acceptButtonText, int cancelButtonText, Context context, MaterialDialog.ButtonCallback callback) {
-        new MaterialDialog.Builder(context).title(title).content(message).positiveText(acceptButtonText).negativeText(cancelButtonText).callback(callback).show();
+    public static MaterialDialog showConfirmationDialog(int title, int message, int acceptButtonText, int cancelButtonText, Context context, MaterialDialog.ButtonCallback callback) {
+        return new MaterialDialog.Builder(context).title(title).content(message).positiveText(acceptButtonText).negativeText(cancelButtonText).callback(callback).show();
     }
 
-    public static void showConfirmationDialog(int message, int acceptButtonText, int cancelButtonText, Context context, MaterialDialog.ButtonCallback callback) {
-        new MaterialDialog.Builder(context).content(message).positiveText(acceptButtonText).negativeText(cancelButtonText).callback(callback).show();
+    public static MaterialDialog showConfirmationDialog(int message, int acceptButtonText, int cancelButtonText, Context context, MaterialDialog.ButtonCallback callback) {
+        return new MaterialDialog.Builder(context).content(message).positiveText(acceptButtonText).negativeText(cancelButtonText).callback(callback).show();
     }
 
-    public static void showSelectionDialog(int title, String[] items, Context context, MaterialDialog.ListCallback listCallback) {
-        new MaterialDialog.Builder(context).title(title).items(items).itemsCallback(listCallback).show();
+    public static MaterialDialog showSelectionDialog(int title, String[] items, Context context, MaterialDialog.ListCallback listCallback) {
+        return new MaterialDialog.Builder(context).title(title).items(items).itemsCallback(listCallback).show();
     }
 
-    public static void showSingleChoiceDialog(int title, int selectedIndex, String[] items, Context context, MaterialDialog.ListCallbackSingleChoice listCallback) {
-        new MaterialDialog.Builder(context).title(title).items(items).itemsCallbackSingleChoice(selectedIndex, listCallback).show();
+    public static MaterialDialog showSingleChoiceDialog(int title, int selectedIndex, String[] items, Context context, MaterialDialog.ListCallbackSingleChoice listCallback) {
+        return new MaterialDialog.Builder(context).title(title).items(items).itemsCallbackSingleChoice(selectedIndex, listCallback).show();
     }
 
     public static MaterialDialog getCustomDialog(int title, int acceptButtonText, int cancelButtonText, int layout, Context context, MaterialDialog.ButtonCallback callback) {
