@@ -62,12 +62,7 @@ public class ApplicationHelper {
     public static boolean isConnectedToWifi(Context context) {
         ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-        if (mWifi.isConnected()) {
-            return true;
-        } else {
-            return false;
-        }
+        return mWifi.isConnected();
     }
 
     public static boolean hasInternetConnection(Context context) {
@@ -89,7 +84,7 @@ public class ApplicationHelper {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         try {
             context.startActivity(Intent.createChooser(intent, dialogTitle));
-        } catch (android.content.ActivityNotFoundException ex) {
+        } catch (android.content.ActivityNotFoundException ignored) {
         }
     }
 
