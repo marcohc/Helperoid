@@ -2,14 +2,14 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.0"
 
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 22
         versionCode 1
-        versionName "1.2.0.2"
+        versionName "1.2.1"
     }
 
 }
@@ -21,7 +21,6 @@ dependencies {
 
     // For parsing
     compile 'com.fasterxml.jackson.core:jackson-core:2.6.1'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.1'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.1'
 
     // Model mapper
