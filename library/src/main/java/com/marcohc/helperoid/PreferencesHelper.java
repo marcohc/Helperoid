@@ -17,6 +17,7 @@
 package com.marcohc.helperoid;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.util.ArrayList;
@@ -33,14 +34,19 @@ public class PreferencesHelper {
 
     private static final String IS_FIRST_APP_START = "is_first_app_start";
     public static final String LAST_APP_USE_KEY_PREFERENCE = "last_app_use_key_preference";
+    private static Context context;
+    private static String sharedPreferencesName;
     private static SharedPreferences sharedPreferences;
 
     // ************************************************************************************************************************************************************************
     // * Initialization methods
     // ************************************************************************************************************************************************************************
 
-    public static void initialize(SharedPreferences sharedPreferencesParam) {
-        sharedPreferences = sharedPreferencesParam;
+    public static void initialize(Context contextParam, String sharedPreferencesNameParam) {
+
+        context = contextParam;
+        sharedPreferencesName = sharedPreferencesNameParam;
+        sharedPreferences = getSharedPreferences();
 
         String isFirstAppStart = getString(IS_FIRST_APP_START, null);
         if (isFirstAppStart == null) {
@@ -55,7 +61,7 @@ public class PreferencesHelper {
     // ************************************************************************************************************************************************************************
 
     public static boolean isFirstAppInstallation() {
-        return "true".equals(getString(IS_FIRST_APP_START, "true")) ? true : false;
+        return "true".equals(getString(IS_FIRST_APP_START, "true"));
     }
 
     public static boolean isFirstUseToday() {
@@ -72,54 +78,57 @@ public class PreferencesHelper {
     // * Shared preferences methods
     // ************************************************************************************************************************************************************************
 
-    public static SharedPreferences getSharedPreference() {
+    public static SharedPreferences getSharedPreferences() {
+        if (sharedPreferences == null) {
+            sharedPreferences = context.getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE);
+        }
         return sharedPreferences;
     }
 
     public static void remove(String key) {
-        sharedPreferences.edit().remove(key).apply();
+        getSharedPreferences().edit().remove(key).apply();
     }
 
     public static String getString(String key, String defaultValue) {
-        return sharedPreferences.getString(key, defaultValue);
+        return getSharedPreferences().getString(key, defaultValue);
     }
 
     public static void putString(String key, String value) {
-        sharedPreferences.edit().putString(key, value).apply();
+        getSharedPreferences().edit().putString(key, value).apply();
     }
 
     public static Boolean getBoolean(String key, Boolean defaultValue) {
-        return sharedPreferences.getBoolean(key, defaultValue);
+        return getSharedPreferences().getBoolean(key, defaultValue);
     }
 
     public static void putBoolean(String key, Boolean value) {
-        sharedPreferences.edit().putBoolean(key, value).apply();
+        getSharedPreferences().edit().putBoolean(key, value).apply();
     }
 
     public static Long getLong(String key, Long defaultValue) {
-        return sharedPreferences.getLong(key, defaultValue);
+        return getSharedPreferences().getLong(key, defaultValue);
     }
 
     public static void putLong(String key, Long value) {
-        sharedPreferences.edit().putLong(key, value).apply();
+        getSharedPreferences().edit().putLong(key, value).apply();
     }
 
     public static Integer getInt(String key, Integer defaultValue) {
-        return sharedPreferences.getInt(key, defaultValue);
+        return getSharedPreferences().getInt(key, defaultValue);
     }
 
     public static void putInt(String key, Integer value) {
-        sharedPreferences.edit().putInt(key, value).apply();
+        getSharedPreferences().edit().putInt(key, value).apply();
     }
 
     public static void putStringList(String key, List<String> values) {
-        Set<String> setValues = new HashSet<String>(values);
-        sharedPreferences.edit().putStringSet(key, setValues).apply();
+        Set<String> setValues = new HashSet<>(values);
+        getSharedPreferences().edit().putStringSet(key, setValues).apply();
     }
 
     public static List<String> getStringList(String key) {
         List<String> stringList = new ArrayList<>();
-        Set<String> setValues = sharedPreferences.getStringSet(key, null);
+        Set<String> setValues = getSharedPreferences().getStringSet(key, null);
         if (setValues != null) {
             stringList.addAll(setValues);
         }
@@ -127,13 +136,13 @@ public class PreferencesHelper {
     }
 
     public static void putLongList(String key, List<Long> values) {
-        Set<String> setValues = new HashSet<String>(getStringListFromLongList(values));
-        sharedPreferences.edit().putStringSet(key, setValues).apply();
+        Set<String> setValues = new HashSet<>(getStringListFromLongList(values));
+        getSharedPreferences().edit().putStringSet(key, setValues).apply();
     }
 
     public static List<Long> getLongList(String key) {
         List<Long> longList = new ArrayList<>();
-        Set<String> setValues = sharedPreferences.getStringSet(key, null);
+        Set<String> setValues = getSharedPreferences().getStringSet(key, null);
         if (setValues != null) {
             List<String> stringList = new ArrayList<>();
             stringList.addAll(setValues);
