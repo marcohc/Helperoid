@@ -33,6 +33,27 @@ public class ParserHelper {
     private static final String LOG_TAG = "ParserHelper";
     private static ObjectMapper sObjectMapper;
 
+    public static ObjectMapper getObjectMapper() {
+        if (sObjectMapper == null) {
+            sObjectMapper = new ObjectMapper();
+        }
+        return sObjectMapper;
+    }
+
+    public static <T> T parse(Object value, Class<T> valueType) {
+
+        T object = null;
+        try {
+            if (value != null && valueType != null) {
+                String e = getObjectMapper().writeValueAsString(value);
+                object = getObjectMapper().readValue(e, valueType);
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, String.format("parse: %s", e.getMessage()));
+        }
+        return object;
+    }
+
     public static <T extends Object> T parseJson(String jsonString, Class<T> type) {
         ObjectMapper mapper = getObjectMapper();
         T model = null;
@@ -93,10 +114,4 @@ public class ParserHelper {
         return jsonString;
     }
 
-    private static ObjectMapper getObjectMapper() {
-        if (sObjectMapper == null) {
-            sObjectMapper = new ObjectMapper();
-        }
-        return sObjectMapper;
-    }
 }
