@@ -7,22 +7,23 @@ android {
 
     defaultConfig {
         minSdkVersion 11
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
-        versionName "1.2.4"
+        versionName "1.2.5"
     }
 
 }
 
 dependencies {
 
-    // Material dialogs
-    compile 'com.afollestad:material-dialogs:0.7.6.0'
+    compile('com.afollestad.material-dialogs:commons:0.8.1.0@aar') {
+        transitive = true
+    }
 
     // For parsing
-    compile 'com.fasterxml.jackson.core:jackson-core:2.6.1'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.1'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.6.2'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.2'
 
     // Model mapper
-    compile 'org.modelmapper:modelmapper:0.7.4'
+    compile 'org.modelmapper:modelmapper:0.7.5'
 }
