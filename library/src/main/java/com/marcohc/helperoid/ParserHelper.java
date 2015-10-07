@@ -18,6 +18,7 @@ package com.marcohc.helperoid;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONArray;
@@ -41,6 +42,20 @@ public class ParserHelper {
     }
 
     public static <T> T parse(Object value, Class<T> valueType) {
+
+        T object = null;
+        try {
+            if (value != null && valueType != null) {
+                String e = getObjectMapper().writeValueAsString(value);
+                object = getObjectMapper().readValue(e, valueType);
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, String.format("parse: %s", e.getMessage()));
+        }
+        return object;
+    }
+
+    public static <T> T parse(Object value, TypeReference<T> valueType) {
 
         T object = null;
         try {

@@ -6,12 +6,11 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        minSdkVersion 11
+        minSdkVersion 23
         targetSdkVersion 23
         versionCode 1
-        versionName "1.2.5.2"
+        versionName "1.2.5.3"
     }
-
 }
 
 dependencies {
