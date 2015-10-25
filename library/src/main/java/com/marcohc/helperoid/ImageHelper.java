@@ -71,9 +71,9 @@ public class ImageHelper {
             @Override
             public void onSelection(MaterialDialog materialDialog, View view, int position, CharSequence charSequence) {
                 if (position == 0) {
-                    ImageHelper.pickImageFromCamera(activity, file);
+                    pickImageFromCamera(activity, file);
                 } else if (position == 1) {
-                    ImageHelper.pickImageFromGallery(activity);
+                    pickImageFromGallery(activity);
                 }
             }
         });
@@ -356,11 +356,11 @@ public class ImageHelper {
     // ************************************************************************************************************************************************************************
 
     public static Bitmap decodeAndRotateImage(String imagePath, int size) {
-        Bitmap bitmap = ImageHelper.decodeSampledBitmapFromFile(imagePath, size);
-        if (ImageHelper.isRotated(imagePath)) {
-            int orientation = ImageHelper.getOrientation(imagePath);
-            bitmap = ImageHelper.rotateBitmap(bitmap, orientation);
-            Log.d(ImageHelper.LOG_TAG, "imaged has been  rotated ");
+        Bitmap bitmap = decodeSampledBitmapFromFile(imagePath, size);
+        if (isRotated(imagePath)) {
+            int orientation = getOrientation(imagePath);
+            bitmap = rotateBitmap(bitmap, orientation);
+            Log.d(LOG_TAG, "imaged has been  rotated ");
         }
         return bitmap;
     }
@@ -440,7 +440,7 @@ public class ImageHelper {
             bitmap = null;
             System.gc();
         } catch (OutOfMemoryError e) {
-            Log.e(ImageHelper.LOG_TAG, String.format("OutOfMemoryError: downloading image quality to %d", quality - 10));
+            Log.e(LOG_TAG, String.format("OutOfMemoryError: downloading image quality to %d", quality - 10));
             return getImageEncodedInBase64(mImageLocalPath, quality - 10);
         }
 

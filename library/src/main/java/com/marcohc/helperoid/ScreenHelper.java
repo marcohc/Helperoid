@@ -27,35 +27,35 @@ import android.view.inputmethod.InputMethodManager;
 public class ScreenHelper {
 
     public static int getDpFromPx(Context context, float px) {
+        if (context == null) return 0;
         return (int) (px / context.getResources().getDisplayMetrics().density);
     }
 
     public static int getPxFromDp(Context context, float dp) {
+        if (context == null) return 0;
         return (int) (dp * context.getResources().getDisplayMetrics().density);
     }
 
     public static int getScreenWidth(Context context) {
+        if (context == null) return 0;
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
-        int width = metrics.widthPixels;
-
-        return width;
+        return metrics.widthPixels;
     }
 
     public static int getScreenHeight(Context context) {
+        if (context == null) return 0;
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
-        int height = metrics.heightPixels;
-
-        return height;
+        return metrics.heightPixels;
     }
 
     public static void hideKeyboard(Activity activity) {
-        // Check if no view has focus:
+        if (activity == null) return;
         View view = activity.getCurrentFocus();
         if (view != null) {
             InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
