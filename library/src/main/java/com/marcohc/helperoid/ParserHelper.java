@@ -42,21 +42,21 @@ public class ParserHelper {
     }
 
     public static <T> T parse(Object value, Class<T> valueType) {
-
         T object = null;
         try {
             if (value != null && valueType != null) {
-                String e = getObjectMapper().writeValueAsString(value);
-                object = getObjectMapper().readValue(e, valueType);
+                if (!String.class.isInstance(value)) {
+                    value = ParserHelper.getObjectMapper().writeValueAsString(value);
+                }
+                object = ParserHelper.getObjectMapper().readValue((String) value, valueType);
             }
-        } catch (IOException e) {
-            Log.e(LOG_TAG, String.format("parse: %s", e.getMessage()));
+        } catch (IOException var4) {
+            Log.e("ParserHelper", String.format("parse: %s", var4.getMessage()));
         }
         return object;
     }
 
     public static <T> T parse(Object value, TypeReference<T> valueType) {
-
         T object = null;
         try {
             if (value != null && valueType != null) {

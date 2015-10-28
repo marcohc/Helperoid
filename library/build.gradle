@@ -9,13 +9,13 @@ android {
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
-        versionName "1.2.6"
+        versionName "1.2.6.1"
     }
 }
 
 dependencies {
 
-    compile('com.afollestad.material-dialogs:commons:0.8.1.0@aar') {
+    compile('com.afollestad.material-dialogs:core:0.8.4.2@aar') {
         transitive = true
     }
 
