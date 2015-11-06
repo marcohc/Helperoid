@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,7 +73,7 @@ public class ParserHelper {
         if (jsonArray != null) {
             for (int i = 0; i < jsonArray.length(); i++) {
                 try {
-                    list.add(parse((JSONObject) jsonArray.get(i), type));
+                    list.add(parse(jsonArray.get(i).toString(), type));
                 } catch (JSONException e) {
                     Log.e(LOG_TAG, String.format("parseJsonStringArray: %s", e.getMessage()));
                 }
