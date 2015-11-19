@@ -3,19 +3,19 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
-        versionName "1.2.6.3"
+        versionName "1.2.6.4"
     }
 }
 
 dependencies {
 
-    compile('com.afollestad.material-dialogs:core:0.8.5.0@aar') {
+    compile('com.afollestad.material-dialogs:core:0.8.5.1@aar') {
         transitive = true
     }
 
