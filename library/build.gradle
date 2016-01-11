@@ -9,19 +9,19 @@ android {
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
-        versionName "1.2.6.4"
+        versionName "1.2.6.5"
     }
 }
 
 dependencies {
 
-    compile('com.afollestad.material-dialogs:core:0.8.5.1@aar') {
+    compile('com.afollestad.material-dialogs:core:0.8.5.3@aar') {
         transitive = true
     }
 
     // For parsing
-    compile 'com.fasterxml.jackson.core:jackson-core:2.6.3'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.7.0'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.0'
 
     // Model mapper
     compile 'org.modelmapper:modelmapper:0.7.5'
