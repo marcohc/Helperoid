@@ -17,7 +17,6 @@
 package com.marcohc.helperoid;
 
 import android.content.Context;
-import android.support.v4.view.ViewPager.LayoutParams;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
@@ -27,6 +26,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
+import android.widget.RelativeLayout;
 
 public class AnimationHelper {
 
@@ -38,7 +38,8 @@ public class AnimationHelper {
     // ************************************************************************************************************************************************************************
 
     public static Animation getExpandViewAnimation(final View view, int duration) {
-        view.measure(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+
+        view.measure(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         final int targetHeight = view.getMeasuredHeight();
 
         view.getLayoutParams().height = 0;
@@ -46,7 +47,7 @@ public class AnimationHelper {
         Animation animation = new Animation() {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
-                view.getLayoutParams().height = interpolatedTime == 1 ? LayoutParams.WRAP_CONTENT : (int) (targetHeight * interpolatedTime);
+                view.getLayoutParams().height = interpolatedTime == 1 ? RelativeLayout.LayoutParams.WRAP_CONTENT : (int) (targetHeight * interpolatedTime);
                 view.requestLayout();
             }
 

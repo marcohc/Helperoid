@@ -43,9 +43,6 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
-import android.view.View;
-
-import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -64,20 +61,23 @@ public class ImageHelper {
     public static final int SELECT_PICTURE_FROM_GALLERY_REQUEST = 10;
     public static final int CAMERA_REQUEST = 20;
 
-    public static void showPickUpImageDialog(final Activity activity, final Uri file) {
-
-        String[] values = {activity.getString(R.string.camera), activity.getString(R.string.gallery)};
-        DialogHelper.showSelectionDialog(R.string.select, values, activity, new MaterialDialog.ListCallback() {
-            @Override
-            public void onSelection(MaterialDialog materialDialog, View view, int position, CharSequence charSequence) {
-                if (position == 0) {
-                    pickImageFromCamera(activity, file);
-                } else if (position == 1) {
-                    pickImageFromGallery(activity);
-                }
-            }
-        });
-    }
+//    public static void showPickUpImageDialog(final Activity activity, final Uri file) {
+//        String[] values = {activity.getString(R.string.camera), activity.getString(R.string.gallery)};
+//        new MaterialDialog.Builder(activity)
+//                .title(R.string.select)
+//                .items(values)
+//                .itemsCallback(new MaterialDialog.ListCallback() {
+//                    @Override
+//                    public void onSelection(MaterialDialog dialog, View view, int position, CharSequence text) {
+//                        if (position == 0) {
+//                            pickImageFromCamera(activity, file);
+//                        } else if (position == 1) {
+//                            pickImageFromGallery(activity);
+//                        }
+//                    }
+//                })
+//                .show();
+//    }
 
     private static void pickImageFromCamera(Activity activity, Uri file) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
