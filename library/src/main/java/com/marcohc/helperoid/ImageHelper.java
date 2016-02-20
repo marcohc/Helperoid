@@ -79,13 +79,13 @@ public class ImageHelper {
 //                .show();
 //    }
 
-    private static void pickImageFromCamera(Activity activity, Uri file) {
+    public static void pickImageFromCamera(Activity activity, Uri file) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, file);
         activity.startActivityForResult(intent, CAMERA_REQUEST);
     }
 
-    private static void pickImageFromGallery(Activity activity) {
+    public static void pickImageFromGallery(Activity activity) {
         Intent intent;
         if (Build.VERSION.SDK_INT < 19) {
             intent = new Intent(Intent.ACTION_GET_CONTENT, null);
