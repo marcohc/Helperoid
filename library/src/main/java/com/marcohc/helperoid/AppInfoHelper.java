@@ -33,7 +33,7 @@ public class AppInfoHelper {
     // * User behaviour methods
     // ************************************************************************************************************************************************************************
 
-    public boolean isFirstAppExecution() {
+    public static boolean isFirstAppExecution() {
         String firstAppStartValue = PreferencesHelper.getInstance().getString(IS_FIRST_APP_EXECUTION, null);
         boolean isFirstAppStart;
         if (firstAppStartValue == null || firstAppStartValue.equals("false")) {
@@ -46,20 +46,20 @@ public class AppInfoHelper {
         return isFirstAppStart;
     }
 
-    public void forceFirstAppExecution() {
+    public static void forceFirstAppExecution() {
         PreferencesHelper.getInstance().putString(IS_FIRST_APP_EXECUTION, "false");
     }
 
-    public void trackLastAppExecution() {
+    public static void trackLastAppExecution() {
         PreferencesHelper.getInstance().putLong(LAST_APP_EXECUTION, System.currentTimeMillis());
     }
 
-    public boolean isFirstUseToday() {
+    public static boolean isFirstUseToday() {
         long lastUseTime = PreferencesHelper.getInstance().getLong(LAST_APP_EXECUTION, System.currentTimeMillis());
         return !DateHelper.isInTheSameDayOfCurrentDate(lastUseTime);
     }
 
-    public boolean isFirstUseLast24Hours() {
+    public static boolean isFirstUseLast24Hours() {
         long lastUseTime = PreferencesHelper.getInstance().getLong(LAST_APP_EXECUTION, System.currentTimeMillis());
         return DateHelper.isInLast24HoursOfCurrentDate(lastUseTime);
     }
