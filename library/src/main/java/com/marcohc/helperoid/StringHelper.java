@@ -14,10 +14,14 @@ public class StringHelper {
      * @return true valid hex, false invalid hex
      */
     public static boolean isEmailValid(final String email) {
-        if (pattern == null) {
-            pattern = Pattern.compile(EMAIL_PATTERN);
+        boolean isValid = false;
+        if (email != null) {
+            if (pattern == null) {
+                pattern = Pattern.compile(EMAIL_PATTERN);
+            }
+            isValid = pattern.matcher(email).matches();
         }
-        return pattern.matcher(email).matches();
+        return isValid;
     }
 
     public static boolean isEmpty(final String text) {

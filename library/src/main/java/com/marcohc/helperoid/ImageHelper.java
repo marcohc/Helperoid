@@ -18,8 +18,10 @@ package com.marcohc.helperoid;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -42,7 +44,6 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -50,9 +51,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class ImageHelper {
+import timber.log.Timber;
 
-    private static final String LOG_TAG = "ImageHelper";
+public class ImageHelper {
 
     // ************************************************************************************************************************************************************************
     // * Show dialog with take picture or get picture from gallery methods
@@ -61,23 +62,22 @@ public class ImageHelper {
     public static final int SELECT_PICTURE_FROM_GALLERY_REQUEST = 10;
     public static final int CAMERA_REQUEST = 20;
 
-//    public static void showPickUpImageDialog(final Activity activity, final Uri file) {
-//        String[] values = {activity.getString(R.string.camera), activity.getString(R.string.gallery)};
-//        new MaterialDialog.Builder(activity)
-//                .title(R.string.select)
-//                .items(values)
-//                .itemsCallback(new MaterialDialog.ListCallback() {
-//                    @Override
-//                    public void onSelection(MaterialDialog dialog, View view, int position, CharSequence text) {
-//                        if (position == 0) {
-//                            pickImageFromCamera(activity, file);
-//                        } else if (position == 1) {
-//                            pickImageFromGallery(activity);
-//                        }
-//                    }
-//                })
-//                .show();
-//    }
+    public static void showPickUpImageDialog(final Activity activity, final Uri file) {
+        String[] values = {activity.getString(R.string.camera), activity.getString(R.string.gallery)};
+        new AlertDialog.Builder(activity)
+                .setTitle(R.string.select)
+                .setItems(values, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            pickImageFromCamera(activity, file);
+                        } else if (which == 1) {
+                            pickImageFromGallery(activity);
+                        }
+                    }
+                })
+                .show();
+    }
 
     public static void pickImageFromCamera(Activity activity, Uri file) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -360,7 +360,7 @@ public class ImageHelper {
         if (isRotated(imagePath)) {
             int orientation = getOrientation(imagePath);
             bitmap = rotateBitmap(bitmap, orientation);
-            Log.d(LOG_TAG, "imaged has been  rotated ");
+            Timber.d("imaged has been  rotated ");
         }
         return bitmap;
     }
@@ -415,7 +415,7 @@ public class ImageHelper {
                 return bitmap;
         }
         try {
-            Log.d(LOG_TAG, "imaged has been  rotated ");
+            Timber.d("imaged has been  rotated ");
             Bitmap bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
             bitmap.recycle();
             return bmRotated;
@@ -440,7 +440,7 @@ public class ImageHelper {
             bitmap = null;
             System.gc();
         } catch (OutOfMemoryError e) {
-            Log.e(LOG_TAG, String.format("OutOfMemoryError: downloading image quality to %d", quality - 10));
+            Timber.e("OutOfMemoryError: downloading image quality to %d", quality - 10);
             return getImageEncodedInBase64(mImageLocalPath, quality - 10);
         }
 
@@ -466,7 +466,7 @@ public class ImageHelper {
 
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e("getBmpFromUrl error: ", e.getMessage().toString());
+            Timber.e("getBmpFromUrl: ", e.getMessage());
             return null;
         }
     }

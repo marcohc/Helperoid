@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Marco Hernaiz Cao
+ * Copyright (C) 2016 Marco Hernaiz Cao
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.marcohc.helperoid;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -25,124 +23,117 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@SuppressLint("CommitPrefEdits")
+/**
+ * For managing shared preferences
+ * <p>
+ * Call {@link #setUp(Context)} method first or {@link #setUp(Context, String)} first
+ *
+ * Default shared preferences name will be: <package_name>_preferences
+ */
 public class PreferencesHelper {
 
     // ************************************************************************************************************************************************************************
-    // * Attributes and constants
+    // * Attributes
     // ************************************************************************************************************************************************************************
 
-    private static final String IS_FIRST_APP_START = "is_first_app_start";
-    public static final String LAST_APP_USE_KEY_PREFERENCE = "last_app_use_key_preference";
-    private static Context context;
-    private static String sharedPreferencesName;
-    private static SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
+    private static PreferencesHelper instance;
 
     // ************************************************************************************************************************************************************************
     // * Initialization methods
     // ************************************************************************************************************************************************************************
 
-    public static void initialize(Context contextParam, String sharedPreferencesNameParam) {
+    private PreferencesHelper(Context context) {
+        sharedPreferences = context.getSharedPreferences(String.format("%s_%s", context.getPackageName(), "preferences"), Context.MODE_PRIVATE);
+    }
 
-        context = contextParam;
-        sharedPreferencesName = sharedPreferencesNameParam;
-        sharedPreferences = getSharedPreferences();
+    public PreferencesHelper(Context context, String sharedPreferencesName) {
+        sharedPreferences = context.getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE);
+    }
 
-        String isFirstAppStart = getString(IS_FIRST_APP_START, null);
-        if (isFirstAppStart == null) {
-            PreferencesHelper.putString(IS_FIRST_APP_START, "true");
-        } else {
-            PreferencesHelper.putString(IS_FIRST_APP_START, "false");
+    public static void setUp(Context context) {
+        if (context == null) {
+            throw new PreferencesHelperException("Context must not be null!");
         }
+        instance = new PreferencesHelper(context);
     }
 
-    // ************************************************************************************************************************************************************************
-    // * User behaviour methods
-    // ************************************************************************************************************************************************************************
-
-    public static boolean isFirstAppInstallation() {
-        return "true".equals(getString(IS_FIRST_APP_START, "true"));
-    }
-
-    public static boolean isFirstUseToday() {
-        long lastUseTime = getLong(LAST_APP_USE_KEY_PREFERENCE, System.currentTimeMillis());
-        return !DateHelper.isInTheSameDayOfCurrentDate(lastUseTime);
-    }
-
-    public static boolean isFirstUseLast24Hours() {
-        long lastUseTime = getLong(LAST_APP_USE_KEY_PREFERENCE, System.currentTimeMillis());
-        return DateHelper.isInLast24HoursOfCurrentDate(lastUseTime);
-    }
-
-    // ************************************************************************************************************************************************************************
-    // * Shared preferences methods
-    // ************************************************************************************************************************************************************************
-
-    public static SharedPreferences getSharedPreferences() {
-        if (sharedPreferences == null) {
-            sharedPreferences = context.getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE);
+    public static void setUp(Context context, String sharedPreferencesName) {
+        if (context == null) {
+            throw new PreferencesHelperException("Context must not be null!");
         }
-        return sharedPreferences;
+        instance = new PreferencesHelper(context, sharedPreferencesName);
     }
 
-    public static void remove(String key) {
-        getSharedPreferences().edit().remove(key).apply();
+    public static PreferencesHelper getInstance() {
+        if (instance == null) {
+            throw new PreferencesHelperException("setUp(Context context) must be called first!");
+        }
+        return instance;
     }
 
-    public static String getString(String key, String defaultValue) {
-        return getSharedPreferences().getString(key, defaultValue);
+    // ************************************************************************************************************************************************************************
+    // * Public methods
+    // ************************************************************************************************************************************************************************
+
+    public void remove(String key) {
+        sharedPreferences.edit().remove(key).apply();
     }
 
-    public static void putString(String key, String value) {
-        getSharedPreferences().edit().putString(key, value).apply();
+    public String getString(String key, String defaultValue) {
+        return sharedPreferences.getString(key, defaultValue);
     }
 
-    public static Boolean getBoolean(String key, Boolean defaultValue) {
-        return getSharedPreferences().getBoolean(key, defaultValue);
+    public void putString(String key, String value) {
+        sharedPreferences.edit().putString(key, value).apply();
     }
 
-    public static void putBoolean(String key, Boolean value) {
-        getSharedPreferences().edit().putBoolean(key, value).apply();
+    public Boolean getBoolean(String key, Boolean defaultValue) {
+        return sharedPreferences.getBoolean(key, defaultValue);
     }
 
-    public static Long getLong(String key, Long defaultValue) {
-        return getSharedPreferences().getLong(key, defaultValue);
+    public void putBoolean(String key, Boolean value) {
+        sharedPreferences.edit().putBoolean(key, value).apply();
     }
 
-    public static void putLong(String key, Long value) {
-        getSharedPreferences().edit().putLong(key, value).apply();
+    public Long getLong(String key, Long defaultValue) {
+        return sharedPreferences.getLong(key, defaultValue);
     }
 
-    public static Integer getInt(String key, Integer defaultValue) {
-        return getSharedPreferences().getInt(key, defaultValue);
+    public void putLong(String key, Long value) {
+        sharedPreferences.edit().putLong(key, value).apply();
     }
 
-    public static void putInt(String key, Integer value) {
-        getSharedPreferences().edit().putInt(key, value).apply();
+    public Integer getInt(String key, Integer defaultValue) {
+        return sharedPreferences.getInt(key, defaultValue);
     }
 
-    public static void putStringList(String key, List<String> values) {
+    public void putInt(String key, Integer value) {
+        sharedPreferences.edit().putInt(key, value).apply();
+    }
+
+    public void putStringList(String key, List<String> values) {
         Set<String> setValues = new HashSet<>(values);
-        getSharedPreferences().edit().putStringSet(key, setValues).apply();
+        sharedPreferences.edit().putStringSet(key, setValues).apply();
     }
 
-    public static List<String> getStringList(String key) {
+    public List<String> getStringList(String key) {
         List<String> stringList = new ArrayList<>();
-        Set<String> setValues = getSharedPreferences().getStringSet(key, null);
+        Set<String> setValues = sharedPreferences.getStringSet(key, null);
         if (setValues != null) {
             stringList.addAll(setValues);
         }
         return stringList;
     }
 
-    public static void putLongList(String key, List<Long> values) {
+    public void putLongList(String key, List<Long> values) {
         Set<String> setValues = new HashSet<>(getStringListFromLongList(values));
-        getSharedPreferences().edit().putStringSet(key, setValues).apply();
+        sharedPreferences.edit().putStringSet(key, setValues).apply();
     }
 
-    public static List<Long> getLongList(String key) {
+    public List<Long> getLongList(String key) {
         List<Long> longList = new ArrayList<>();
-        Set<String> setValues = getSharedPreferences().getStringSet(key, null);
+        Set<String> setValues = sharedPreferences.getStringSet(key, null);
         if (setValues != null) {
             List<String> stringList = new ArrayList<>();
             stringList.addAll(setValues);
@@ -155,7 +146,7 @@ public class PreferencesHelper {
     // * Auxiliary methods
     // ************************************************************************************************************************************************************************
 
-    private static List<Long> getLongListFromStringList(List<String> stringList) {
+    private List<Long> getLongListFromStringList(List<String> stringList) {
         List<Long> longList = new ArrayList<>();
         for (String item : stringList) {
             longList.add(Long.valueOf(item));
@@ -163,7 +154,7 @@ public class PreferencesHelper {
         return longList;
     }
 
-    private static List<String> getStringListFromLongList(List<Long> longList) {
+    private List<String> getStringListFromLongList(List<Long> longList) {
         List<String> stringList = new ArrayList<>();
         for (Long item : longList) {
             stringList.add(String.valueOf(item));
@@ -171,4 +162,8 @@ public class PreferencesHelper {
         return stringList;
     }
 
+    private static class PreferencesHelperException extends RuntimeException {
+        public PreferencesHelperException(String s) {
+        }
+    }
 }

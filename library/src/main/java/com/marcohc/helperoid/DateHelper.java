@@ -21,6 +21,9 @@ import android.annotation.SuppressLint;
 import java.util.Calendar;
 import java.util.Locale;
 
+/**
+ * Calendar and date useful methods
+ */
 @SuppressLint("DefaultLocale")
 public class DateHelper {
 

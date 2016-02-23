@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Marco Hernaiz Cao
+ * Copyright (C) 2016 Marco Hernaiz Cao
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,9 @@ import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 import android.widget.RelativeLayout;
 
+/**
+ * Class to execute animations
+ */
 public class AnimationHelper {
 
     public static final int FADE_DURATION = 200;

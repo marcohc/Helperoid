@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Marco Hernaiz Cao
+ * Copyright (C) 2016 Marco Hernaiz Cao
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.marcohc.helperoid;
-
-import android.util.Log;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,83 +25,104 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
+/**
+ * Singleton for parsing useful methods
+ */
 public class ParserHelper {
 
-    private static final String LOG_TAG = "ParserHelper";
-    private static ObjectMapper sObjectMapper;
+    private static ParserHelper instance;
 
-    public static ObjectMapper getObjectMapper() {
-        if (sObjectMapper == null) {
-            sObjectMapper = new ObjectMapper();
-        }
-        return sObjectMapper;
+    private ObjectMapper objectMapper;
+
+    private ParserHelper() {
+        objectMapper = new ObjectMapper();
     }
 
-    public static <T> T parse(Object value, Class<T> valueType) {
+    // ************************************************************************************************************************************************************************
+    // * Public methods
+    // ************************************************************************************************************************************************************************
+
+    public static ParserHelper getInstance() {
+        if (instance == null) {
+            instance = new ParserHelper();
+        }
+        return instance;
+    }
+
+    public <T> T parse(Object value, Class<T> valueType) {
         T object = null;
         try {
             if (value != null && valueType != null) {
                 if (!String.class.isInstance(value)) {
-                    value = ParserHelper.getObjectMapper().writeValueAsString(value);
+                    value = objectMapper.writeValueAsString(value);
                 }
-                object = ParserHelper.getObjectMapper().readValue((String) value, valueType);
+                object = objectMapper.readValue((String) value, valueType);
             }
         } catch (IOException var4) {
-            Log.e("ParserHelper", String.format("parse: %s", var4.getMessage()));
+            Timber.e("ParserHelper", String.format("parse: %s", var4.getMessage()));
         }
         return object;
     }
 
-    public static <T> T parse(Object value, TypeReference<T> valueType) {
+    public <T> T parse(Object value, TypeReference<T> valueType) {
         T object = null;
         try {
             if (value != null && valueType != null) {
-                String e = getObjectMapper().writeValueAsString(value);
-                object = getObjectMapper().readValue(e, valueType);
+                String e = objectMapper.writeValueAsString(value);
+                object = objectMapper.readValue(e, valueType);
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, String.format("parse: %s", e.getMessage()));
+            Timber.e(String.format("parse: %s", e.getMessage()));
         }
         return object;
     }
 
-    public static <T> List<T> parseJsonArray(JSONArray jsonArray, Class<T> type) {
+    public <T> List<T> parseJsonArray(JSONArray jsonArray, Class<T> type) {
         List<T> list = new ArrayList<>();
         if (jsonArray != null) {
             for (int i = 0; i < jsonArray.length(); i++) {
                 try {
                     list.add(parse(jsonArray.get(i).toString(), type));
                 } catch (JSONException e) {
-                    Log.e(LOG_TAG, String.format("parseJsonStringArray: %s", e.getMessage()));
+                    Timber.e(String.format("parseJsonStringArray: %s", e.getMessage()));
                 }
             }
         }
         return list;
     }
 
-    public static <T> List<T> parseJsonStringArray(String jsonString, Class<T> type) {
+    public <T> List<T> parseJsonStringArray(String jsonString, Class<T> type) {
         List<T> list = new ArrayList<>();
         if (jsonString != null) {
             try {
                 list = parseJsonArray(new JSONArray(jsonString), type);
             } catch (JSONException e) {
-                Log.e(LOG_TAG, String.format("parseJsonStringArray: %s", e.getMessage()));
+                Timber.e(String.format("parseJsonStringArray: %s", e.getMessage()));
             }
         }
         return list;
     }
 
-    public static String toJsonString(Object jsonObject) {
+    public String toJsonString(Object jsonObject) {
         String jsonString = "";
         if (jsonObject != null) {
-            ObjectMapper mapper = getObjectMapper();
             try {
-                jsonString = mapper.writeValueAsString(jsonObject);
+                jsonString = objectMapper.writeValueAsString(jsonObject);
             } catch (Exception e) {
-                Log.e(LOG_TAG, String.format("toJsonString: %s", e.getMessage()));
+                Timber.e(String.format("toJsonString: %s", e.getMessage()));
             }
         }
         return jsonString;
     }
 
+    /**
+     * To modify configurations
+     *
+     * @return ObjectMapper
+     */
+    public ObjectMapper getObjectMapper() {
+        return objectMapper;
+    }
 }

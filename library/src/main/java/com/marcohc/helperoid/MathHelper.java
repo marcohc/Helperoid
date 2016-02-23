@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Marco Hernaiz Cao
+ * Copyright (C) 2016 Marco Hernaiz Cao
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,16 @@ package com.marcohc.helperoid;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ * Math methods
+ */
 public class MathHelper {
 
-	public static double round(Double value) {
-		return new BigDecimal(value).setScale(2, RoundingMode.HALF_EVEN).doubleValue();
-	}
+    public static double round(Double value) {
+        return new BigDecimal(value).setScale(2, RoundingMode.HALF_EVEN).doubleValue();
+    }
 
-	public static float round(Float value) {
-		return new BigDecimal(value).setScale(2, RoundingMode.HALF_EVEN).floatValue();
-	}
+    public static float round(Float value) {
+        return new BigDecimal(value).setScale(2, RoundingMode.HALF_EVEN).floatValue();
+    }
 }

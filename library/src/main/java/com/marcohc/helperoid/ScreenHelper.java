@@ -24,6 +24,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+/**
+ * Screen related methods
+ */
 public class ScreenHelper {
 
     public static int getDpFromPx(Context context, float px) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Marco Hernaiz Cao
+ * Copyright (C) 2016 Marco Hernaiz Cao
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import android.content.Context;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,11 +29,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Standard date and string formats
+ */
 @SuppressLint({"DefaultLocale", "SimpleDateFormat"})
 public class FormatterHelper {
-
-
-    public static final String LOG_TAG = "FormatterHelper";
 
     /**
      * Format depending on Locale like: Tuesday 15
@@ -205,6 +206,15 @@ public class FormatterHelper {
         final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
         int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
         return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
+    public static String[] getMonthsStringArray() {
+        String[] months = new DateFormatSymbols().getMonths();
+        int i = 0;
+        for (String month : months) {
+            months[i++] = month.substring(0, 1).toUpperCase();
+        }
+        return months;
     }
 
 }
