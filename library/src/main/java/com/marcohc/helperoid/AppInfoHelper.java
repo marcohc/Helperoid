@@ -26,8 +26,8 @@ import android.support.annotation.RequiresPermission;
  */
 public class AppInfoHelper {
 
-    private final String IS_FIRST_APP_EXECUTION = "is_first_app_start";
-    private final String LAST_APP_EXECUTION = "last_app_execution";
+    private static final String IS_FIRST_APP_EXECUTION = "is_first_app_start";
+    private static final String LAST_APP_EXECUTION = "last_app_execution";
 
     // ************************************************************************************************************************************************************************
     // * User behaviour methods

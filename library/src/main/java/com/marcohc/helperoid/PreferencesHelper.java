@@ -162,7 +162,7 @@ public class PreferencesHelper {
         return stringList;
     }
 
-    private static class PreferencesHelperException extends RuntimeException {
+    public static class PreferencesHelperException extends RuntimeException {
         public PreferencesHelperException(String s) {
         }
     }

@@ -1,3 +1,5 @@
+package com.marcohc.helperoid;
+
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.marcohc.helperoid.StringHelper;
